@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SampleCo — Modular & Industrial Demo</title>
 
-  <!-- Basic SEO / Social -->
   <meta name="description" content="SampleCo — Demo single-page site showing modular spaces, engineering & sample projects (mock content).">
   <meta property="og:title" content="SampleCo — Modular & Industrial Demo">
   <meta property="og:description" content="A demo single-page site showcasing modular sites and engineering projects.">
@@ -13,17 +12,17 @@
   <meta name="twitter:card" content="summary_large_image">
 
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- Inter + Material Symbols -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
 
-  <!-- Tailwind CDN for development; compile for production -->
+  <!-- Tailwind CDN for dev; swap for compiled build in production -->
   <script src="https://cdn.tailwindcss.com"></script>
 
   <style>
     :root{
-      --bg-900: #0b0f14;
-      --bg-800: #0f1720;
+      --bg-900: #0b0f14;         /* page top gradient */
+      --bg-800: #0f1720;        /* single dark color for all inner sections */
+      --section-bg: var(--bg-800); /* single dark background for sections starting at About */
       --muted: #9fb0bb;
       --accent: #D9A640;
       --card: rgba(255,255,255,0.02);
@@ -31,6 +30,7 @@
       --max-width: 1200px;
       --header-height: 72px;
     }
+
     html,body{ height:100%; }
     body{
       font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
@@ -68,6 +68,7 @@
     .overlay { background: rgba(0,0,0,0.45); opacity:0; visibility:hidden; transition: opacity .28s ease; }
     .overlay.show { opacity:1; visibility:visible; }
 
+    /* HERO */
     .hero { min-height: calc(100vh - var(--header-height)); position: relative; overflow:hidden; padding-top:2.25rem; padding-bottom:2.25rem; display:flex; align-items:center; }
     .grid-decor { position:absolute; inset:0; opacity:.06; background-image:
       radial-gradient(circle at 10% 10%, #ffffff 0px, transparent 2px),
@@ -84,19 +85,94 @@
 
     .venture-pill { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:.5rem .75rem; border-radius:999px; display:inline-flex; gap:.6rem; align-items:center; border:1px solid rgba(255,255,255,0.03); font-weight:600; }
 
+    /* SECTION (single dark background) */
+    .section {
+      background: var(--section-bg);
+      padding-top: 4rem;
+      padding-bottom: 4rem;
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* Centered heading with dashed/hatch lines */
+    .section-heading {
+      display:flex;
+      align-items:center;
+      gap:1rem;
+      justify-content:center;
+      margin-bottom:1.25rem;
+    }
+    .section-heading span {
+      padding: 0 .9rem;
+      font-weight:800;
+      letter-spacing: 0.02em;
+      position:relative;
+      z-index:1;
+      color: #e6eef8;
+      background: linear-gradient(90deg, rgba(15,23,32,0.95), rgba(15,23,32,0.95)); /* mask over the hatch */
+    }
+    .section-heading::before, .section-heading::after {
+      content: "";
+      flex: 1 1 0;
+      height: 1px;
+      border-radius: 2px;
+      /* dashed/hatch style using repeating-linear-gradient */
+      background: repeating-linear-gradient(90deg,
+        rgba(217,166,64,0.22) 0 6px,
+        transparent 6px 12px);
+      opacity: 0.9;
+    }
+
+    /* Card / icon styles */
+    .card-bg { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.03); }
+    .icon-circle { width:56px; height:56px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; background: linear-gradient(180deg, rgba(217,166,64,0.08), rgba(217,166,64,0.03)); border:1px solid rgba(217,166,64,0.06); color: #e6eef8; }
+
+    /* simple floating animation for icon accents */
+    @keyframes floaty { 0% { transform: translateY(0); } 50% { transform: translateY(-6px); } 100% { transform: translateY(0); } }
+    .icon-animate { animation: floaty 4s infinite ease-in-out; will-change: transform; }
+    @media (prefers-reduced-motion: reduce) {
+      .icon-animate { animation: none !important; }
+    }
+
+    /* Focus visibility */
     :focus { outline: none; }
     :focus-visible { outline: 3px solid rgba(217,166,64,0.22); outline-offset: 3px; border-radius: 8px; }
 
-    @media (prefers-reduced-motion: reduce) {
-      .drawer, .overlay, .grid-decor, .btn-primary, .btn-ghost { transition: none !important; animation: none !important; }
-    }
-
-    /* small helpers */
+    /* small helper */
     .muted-strong { color: rgba(230,238,248,0.9); }
-    .card-bg { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.03); }
     .shadow-soft { box-shadow: 0 8px 30px rgba(2,6,23,0.55); }
     .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
     .sr-only:focus, .sr-only:active { position:static; width:auto; height:auto; margin:0; overflow:visible; clip:auto; white-space:normal; }
+    @media (max-width: 767px) { .md-hide { display:none !important; } }
+
+    /* Hero image wrapper (the image you provided) */
+    .hero-img-wrapper {
+      width: 100%;
+      height: 100%;
+      max-height: 320px;           /* constrains image size so it doesn't dominate */
+      border-radius: .75rem;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(217,166,64,0.06), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.03);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .hero-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display:block;
+      transform-origin: center center;
+      transition: transform 8s cubic-bezier(.2,.9,.3,1);
+    }
+    /* subtle slow zoom on large screens for depth — disabled for reduced-motion */
+    @media (min-width: 1024px) {
+      .hero-img-wrapper:hover .hero-image { transform: scale(1.02); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-image { transition: none !important; transform: none !important; }
+    }
+
   </style>
 </head>
 <body>
@@ -188,17 +264,17 @@
     </div>
   </aside>
 
-  <!-- Main content -->
+  <!-- Main: Hero (kept as you liked; removed the 'card' there; image placed right-column in same position) -->
   <main id="home" class="hero relative" tabindex="-1">
     <div class="grid-decor" aria-hidden="true"></div>
 
     <div class="container relative z-10">
       <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-        <!-- Text -->
+        <!-- Hero text -->
         <div class="md:col-span-7">
           <p class="text-sm uppercase tracking-widest" style="color:var(--accent); font-weight:700;">SampleCo</p>
           <h1 class="hero-title mt-4">Modular spaces & engineering solutions for resilient operations.</h1>
-          <p class="hero-sub mt-5">We deliver mock modular infrastructure, rapid-deploy site systems and engineered services. This page contains sample content intended to demonstrate layout, accessibility and design patterns for a single-page site.</p>
+          <p class="hero-sub mt-5">We deliver mock modular infrastructure, rapid-deploy site systems and engineered services. This page contains sample content intended to demonstrate layout, accessibility and futuristic design patterns for a single-page site.</p>
 
           <div class="mt-6 flex flex-wrap gap-3 items-center">
             <a class="btn-primary inline-flex items-center gap-3" href="#projects">
@@ -224,167 +300,192 @@
           </div>
         </div>
 
-        <!-- Visual -->
-        <div class="md:col-span-5">
-          <div class="rounded-2xl p-6 card-bg shadow-soft">
-            <div class="w-full h-56 md:h-72 rounded-lg overflow-hidden bg-gradient-to-tr from-[rgba(217,166,64,0.08)] to-transparent flex items-center justify-center" style="border-radius:.75rem;">
-              <!-- Placeholder illustration: replace with <picture> + srcset in production -->
-              <svg width="220" height="140" viewBox="0 0 220 140" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <rect width="220" height="140" rx="12" fill="rgba(11,15,20,0.6)"/>
-                <g fill="none" stroke="#D9A640" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="18" y="18" width="60" height="40" rx="4"/>
-                  <rect x="80" y="18" width="60" height="40" rx="4"/>
-                  <rect x="142" y="18" width="60" height="40" rx="4"/>
-                  <rect x="18" y="66" width="184" height="52" rx="6"/>
-                </g>
-              </svg>
-            </div>
-
-            <div class="mt-5 text-[rgba(230,238,248,0.9)]">
-              <div class="font-semibold">Turnkey modular & engineered systems</div>
-              <div class="mt-2 text-sm muted-strong">Sample information: design → manufacture → deploy. This card demonstrates spacing and alignment for a hero visual block.</div>
-            </div>
-
-            <div class="mt-5 flex gap-3">
-              <a class="btn-ghost inline-flex items-center gap-2" href="#projects"><span class="material-icons" aria-hidden="true">view_in_ar</span> View projects</a>
-              <a class="btn-ghost inline-flex items-center gap-2" href="#contact"><span class="material-icons" aria-hidden="true">engineering</span> Request quote</a>
-            </div>
+        <!-- Hero image (visible only on md+ screens). Place your file at /assets/pexels-watorious-2381463.jpg -->
+        <div class="md:col-span-5 hidden md:block">
+          <div class="hero-img-wrapper shadow-soft" aria-hidden="false" aria-label="Hero image — modular site">
+            <!-- Use the exact filename you downloaded. Put it in an assets/ folder or update the path below -->
+            <img src="pexels-watorious-2381463.jpg"
+                 alt="Aerial view of modular site (sample)"
+                 class="hero-image" />
           </div>
         </div>
       </div>
     </div>
   </main>
 
-  <!-- About -->
-  <section id="about" class="py-16">
-    <div class="container">
-      <div class="max-w-3xl mx-auto text-center">
-        <h2 class="text-2xl md:text-3xl font-extrabold">About SampleCo</h2>
-        <p class="mt-4 text-[rgba(230,238,248,0.85)]">SampleCo is a fictional demo company used to showcase a single-page layout with accessible components, responsive design and polished UI patterns. Copy below is placeholder sample content.</p>
-      </div>
+  <!-- ABOUT (and all following sections use single dark background) -->
+  <section id="about" class="section">
+    <div class="container text-center">
+      <div class="section-heading" aria-hidden="true"><span>About Us</span></div>
+      <p class="max-w-3xl mx-auto text-[rgba(230,238,248,0.88)] mb-8">SampleCo is fictional — used to demonstrate a minimal, futuristic UI using consistent dark backgrounds, icons, and motion while still prioritizing accessibility.</p>
 
-      <div class="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="p-6 card-bg rounded-2xl">
-          <h3 class="font-semibold">Design</h3>
-          <p class="mt-2 text-sm text-[rgba(230,238,248,0.8)]">Conceptual design for modular units, layouts, and site plans with rapid iteration and prototyping.</p>
+          <div class="flex items-start gap-4">
+            <div class="icon-circle icon-animate"><span class="material-icons" aria-hidden="true">design_services</span></div>
+            <div>
+              <h3 class="font-semibold">Design</h3>
+              <p class="mt-2 text-sm text-[rgba(230,238,248,0.8)]">Concepts, 3D mockups and modular layout designs tuned for rapid deployment.</p>
+            </div>
+          </div>
         </div>
 
         <div class="p-6 card-bg rounded-2xl">
-          <h3 class="font-semibold">Manufacture</h3>
-          <p class="mt-2 text-sm text-[rgba(230,238,248,0.8)]">Factory-built modules with standardized connections and QA processes for consistent outcomes.</p>
+          <div class="flex items-start gap-4">
+            <div class="icon-circle icon-animate"><span class="material-icons" aria-hidden="true">precision_manufacturing</span></div>
+            <div>
+              <h3 class="font-semibold">Manufacture</h3>
+              <p class="mt-2 text-sm text-[rgba(230,238,248,0.8)]">Factory processes, QA checklists and modular assembly planning (sample).</p>
+            </div>
+          </div>
         </div>
 
         <div class="p-6 card-bg rounded-2xl">
-          <h3 class="font-semibold">Deploy</h3>
-          <p class="mt-2 text-sm text-[rgba(230,238,248,0.8)]">Rapid on-site deployment, commissioning and handover. Mock service and maintenance included in sample plans.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Projects -->
-  <section id="projects" class="py-16 bg-[linear-gradient(180deg,rgba(255,255,255,0.01),transparent)]">
-    <div class="container">
-      <div class="flex items-center justify-between">
-        <h2 class="text-2xl md:text-3xl font-extrabold">Selected Projects</h2>
-        <p class="text-sm text-[rgba(230,238,248,0.7)]">Sample projects to illustrate layout</p>
-      </div>
-
-      <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Project card -->
-        <article class="p-6 card-bg rounded-2xl">
-          <div class="h-40 rounded-lg overflow-hidden bg-[rgba(217,166,64,0.06)] flex items-center justify-center">
-            <svg width="160" height="90" viewBox="0 0 160 90" aria-hidden="true"><rect width="160" height="90" rx="8" fill="rgba(11,15,20,0.6)"/><g stroke="#D9A640" stroke-width="2"><rect x="8" y="8" width="40" height="22" rx="3"/><rect x="56" y="8" width="40" height="22" rx="3"/><rect x="104" y="8" width="40" height="22" rx="3"/></g></svg>
+          <div class="flex items-start gap-4">
+            <div class="icon-circle icon-animate"><span class="material-icons" aria-hidden="true">local_shipping</span></div>
+            <div>
+              <h3 class="font-semibold">Deploy</h3>
+              <p class="mt-2 text-sm text-[rgba(230,238,248,0.8)]">Site logistics, staging, and handover procedures designed for fast timelines.</p>
+            </div>
           </div>
-          <h3 class="mt-4 font-semibold">Mock Mining Camp</h3>
-          <p class="mt-2 text-sm text-[rgba(230,238,248,0.8)]">Rapid-deploy site with accommodation, offices, and heavy-equipment shelters. (Sample)</p>
-          <div class="mt-4 flex items-center gap-3">
-            <a class="btn-ghost inline-flex items-center gap-2" href="#contact"><span class="material-icons" aria-hidden="true">call_split</span>Read more</a>
-          </div>
-        </article>
-
-        <article class="p-6 card-bg rounded-2xl">
-          <div class="h-40 rounded-lg overflow-hidden bg-[rgba(217,166,64,0.06)] flex items-center justify-center">
-            <svg width="160" height="90" viewBox="0 0 160 90" aria-hidden="true"><rect width="160" height="90" rx="8" fill="rgba(11,15,20,0.6)"/><g stroke="#D9A640" stroke-width="2"><circle cx="30" cy="30" r="12"/><rect x="56" y="8" width="100" height="22" rx="3"/></g></svg>
-          </div>
-          <h3 class="mt-4 font-semibold">Field Medical Unit</h3>
-          <p class="mt-2 text-sm text-[rgba(230,238,248,0.8)]">Modular clinical spaces for remote operations with HVAC and controlled filtration. (Sample)</p>
-          <div class="mt-4 flex items-center gap-3">
-            <a class="btn-ghost inline-flex items-center gap-2" href="#contact"><span class="material-icons" aria-hidden="true">description</span>Read more</a>
-          </div>
-        </article>
-
-        <article class="p-6 card-bg rounded-2xl">
-          <div class="h-40 rounded-lg overflow-hidden bg-[rgba(217,166,64,0.06)] flex items-center justify-center">
-            <svg width="160" height="90" viewBox="0 0 160 90" aria-hidden="true"><rect width="160" height="90" rx="8" fill="rgba(11,15,20,0.6)"/><g stroke="#D9A640" stroke-width="2"><rect x="8" y="8" width="144" height="22" rx="3"/></g></svg>
-          </div>
-          <h3 class="mt-4 font-semibold">Temporary Operations Hub</h3>
-          <p class="mt-2 text-sm text-[rgba(230,238,248,0.8)]">Turnkey command centre and logistics hub for project-based operations. (Sample)</p>
-          <div class="mt-4 flex items-center gap-3">
-            <a class="btn-ghost inline-flex items-center gap-2" href="#contact"><span class="material-icons" aria-hidden="true">insights</span>Read more</a>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- Ventures -->
-  <section id="ventures" class="py-16">
-    <div class="container">
-      <h2 class="text-2xl md:text-3xl font-extrabold">Ventures & Capabilities</h2>
-      <p class="mt-3 text-[rgba(230,238,248,0.85)] max-w-2xl">Two sample verticals work together in this demo: modular manufacturing and engineering services. The items below reflect sample capabilities.</p>
-
-      <div class="mt-8 grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div class="p-6 card-bg rounded-2xl">
-          <h4 class="font-semibold">Modular Manufacturing</h4>
-          <p class="mt-2 text-sm">Factory-quality modules, containerized systems, and standardized interfaces for rapid assembly.</p>
-        </div>
-
-        <div class="p-6 card-bg rounded-2xl">
-          <h4 class="font-semibold">Site Engineering</h4>
-          <p class="mt-2 text-sm">Civil, structural and MEP design adapted to modular constraints and on-site logistics.</p>
-        </div>
-
-        <div class="p-6 card-bg rounded-2xl">
-          <h4 class="font-semibold">Logistics & Deployment</h4>
-          <p class="mt-2 text-sm">Integrated transport and on-site assembly with staging and commissioning programs.</p>
-        </div>
-
-        <div class="p-6 card-bg rounded-2xl">
-          <h4 class="font-semibold">Maintenance & Support</h4>
-          <p class="mt-2 text-sm">Planned maintenance, spare parts, and remote diagnostics (sample offering).</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Team -->
-  <section id="team" class="py-16 bg-[linear-gradient(180deg,rgba(255,255,255,0.01),transparent)]">
-    <div class="container">
-      <h2 class="text-2xl md:text-3xl font-extrabold">Team (Sample)</h2>
-      <p class="mt-3 text-[rgba(230,238,248,0.85)]">Fictional team members to demonstrate team layout.</p>
+  <!-- PROJECTS -->
+  <section id="projects" class="section">
+    <div class="container text-center">
+      <div class="section-heading" aria-hidden="true"><span>Selected Projects</span></div>
+      <p class="max-w-2xl mx-auto text-[rgba(230,238,248,0.86)] mb-8">Sample projects with icons and thumbnail placeholders to avoid "reading a book" feeling.</p>
 
-      <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <article class="p-6 card-bg rounded-2xl">
+          <div class="flex items-start gap-4">
+            <div class="icon-circle"><span class="material-icons" aria-hidden="true">cabin</span></div>
+            <div>
+              <h3 class="font-semibold">Mock Mining Camp</h3>
+              <p class="mt-2 text-sm text-[rgba(230,238,248,0.8)]">Rapid site with accommodations, workshop and logistics hub (sample).</p>
+            </div>
+          </div>
+          <div class="mt-4">
+            <div class="h-36 rounded-lg overflow-hidden bg-[rgba(217,166,64,0.04)] flex items-center justify-center">
+              <!-- thumbnail placeholder -->
+              <svg width="120" height="72" viewBox="0 0 120 72" aria-hidden="true"><rect width="120" height="72" rx="8" fill="rgba(11,15,20,0.6)"/><g stroke="#D9A640" stroke-width="1.6"><rect x="6" y="6" width="30" height="14" rx="2"/><rect x="44" y="6" width="30" height="14" rx="2"/></g></svg>
+            </div>
+          </div>
+        </article>
+
+        <article class="p-6 card-bg rounded-2xl">
+          <div class="flex items-start gap-4">
+            <div class="icon-circle"><span class="material-icons" aria-hidden="true">medical_services</span></div>
+            <div>
+              <h3 class="font-semibold">Field Medical Unit</h3>
+              <p class="mt-2 text-sm text-[rgba(230,238,248,0.8)]">Modular clinical spaces with HVAC & filtration (sample).</p>
+            </div>
+          </div>
+          <div class="mt-4">
+            <div class="h-36 rounded-lg overflow-hidden bg-[rgba(217,166,64,0.04)] flex items-center justify-center">
+              <svg width="120" height="72" viewBox="0 0 120 72" aria-hidden="true"><rect width="120" height="72" rx="8" fill="rgba(11,15,20,0.6)"/><g stroke="#D9A640" stroke-width="1.6"><circle cx="20" cy="20" r="8"/></g></svg>
+            </div>
+          </div>
+        </article>
+
+        <article class="p-6 card-bg rounded-2xl">
+          <div class="flex items-start gap-4">
+            <div class="icon-circle"><span class="material-icons" aria-hidden="true">workspace_premium</span></div>
+            <div>
+              <h3 class="font-semibold">Operations Hub</h3>
+              <p class="mt-2 text-sm text-[rgba(230,238,248,0.8)]">Turnkey command centre and logistics hub (sample).</p>
+            </div>
+          </div>
+          <div class="mt-4">
+            <div class="h-36 rounded-lg overflow-hidden bg-[rgba(217,166,64,0.04)] flex items-center justify-center">
+              <svg width="120" height="72" viewBox="0 0 120 72" aria-hidden="true"><rect width="120" height="72" rx="8" fill="rgba(11,15,20,0.6)"/></svg>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- VENTURES -->
+  <section id="ventures" class="section">
+    <div class="container text-center">
+      <div class="section-heading" aria-hidden="true"><span>Ventures</span></div>
+      <p class="max-w-2xl mx-auto text-[rgba(230,238,248,0.86)] mb-8">Sample verticals: modular manufacturing and engineering services working together.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="p-6 card-bg rounded-2xl">
+          <div class="flex items-start gap-4">
+            <div class="icon-circle"><span class="material-icons" aria-hidden="true">widgets</span></div>
+            <div>
+              <h4 class="font-semibold">Modular Manufacturing</h4>
+              <p class="mt-2 text-sm">Factory-grade modules and standardized interfaces.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-6 card-bg rounded-2xl">
+          <div class="flex items-start gap-4">
+            <div class="icon-circle"><span class="material-icons" aria-hidden="true">engineering</span></div>
+            <div>
+              <h4 class="font-semibold">Site Engineering</h4>
+              <p class="mt-2 text-sm">Civil, structural & MEP adapted to modular constraints.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-6 card-bg rounded-2xl">
+          <div class="flex items-start gap-4">
+            <div class="icon-circle"><span class="material-icons" aria-hidden="true">local_shipping</span></div>
+            <div>
+              <h4 class="font-semibold">Logistics</h4>
+              <p class="mt-2 text-sm">Transport, staging and on-site assembly planning.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-6 card-bg rounded-2xl">
+          <div class="flex items-start gap-4">
+            <div class="icon-circle"><span class="material-icons" aria-hidden="true">support</span></div>
+            <div>
+              <h4 class="font-semibold">Maintenance</h4>
+              <p class="mt-2 text-sm">Planned maintenance and remote diagnostics (sample).</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section id="team" class="section">
+    <div class="container text-center">
+      <div class="section-heading" aria-hidden="true"><span>Team</span></div>
+      <p class="max-w-2xl mx-auto text-[rgba(230,238,248,0.86)] mb-8">Fictional team to show layout; add real bios or images later.</p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         <div class="p-6 card-bg rounded-2xl flex flex-col items-center text-center">
-          <div class="w-20 h-20 rounded-full bg-[rgba(217,166,64,0.12)] flex items-center justify-center text-[rgba(230,238,248,0.9)] font-semibold">AL</div>
+          <div class="w-20 h-20 rounded-full bg-[rgba(217,166,64,0.12)] flex items-center justify-center text-[rgba(230,238,248,0.95)] font-semibold">AL</div>
           <div class="mt-4 font-semibold">Alex Lane</div>
           <div class="text-sm text-[rgba(230,238,248,0.75)] mt-1">Head of Design</div>
         </div>
 
         <div class="p-6 card-bg rounded-2xl flex flex-col items-center text-center">
-          <div class="w-20 h-20 rounded-full bg-[rgba(217,166,64,0.12)] flex items-center justify-center text-[rgba(230,238,248,0.9)] font-semibold">MJ</div>
+          <div class="w-20 h-20 rounded-full bg-[rgba(217,166,64,0.12)] flex items-center justify-center text-[rgba(230,238,248,0.95)] font-semibold">MJ</div>
           <div class="mt-4 font-semibold">Maya Jones</div>
           <div class="text-sm text-[rgba(230,238,248,0.75)] mt-1">Operations Lead</div>
         </div>
 
         <div class="p-6 card-bg rounded-2xl flex flex-col items-center text-center">
-          <div class="w-20 h-20 rounded-full bg-[rgba(217,166,64,0.12)] flex items-center justify-center text-[rgba(230,238,248,0.9)] font-semibold">SR</div>
+          <div class="w-20 h-20 rounded-full bg-[rgba(217,166,64,0.12)] flex items-center justify-center text-[rgba(230,238,248,0.95)] font-semibold">SR</div>
           <div class="mt-4 font-semibold">Sam Rivers</div>
           <div class="text-sm text-[rgba(230,238,248,0.75)] mt-1">Engineering</div>
         </div>
 
         <div class="p-6 card-bg rounded-2xl flex flex-col items-center text-center">
-          <div class="w-20 h-20 rounded-full bg-[rgba(217,166,64,0.12)] flex items-center justify-center text-[rgba(230,238,248,0.9)] font-semibold">TC</div>
+          <div class="w-20 h-20 rounded-full bg-[rgba(217,166,64,0.12)] flex items-center justify-center text-[rgba(230,238,248,0.95)] font-semibold">TC</div>
           <div class="mt-4 font-semibold">T. Carter</div>
           <div class="text-sm text-[rgba(230,238,248,0.75)] mt-1">Logistics</div>
         </div>
@@ -392,33 +493,37 @@
     </div>
   </section>
 
-  <!-- Testimonials -->
-  <section class="py-16">
-    <div class="container">
-      <h2 class="text-2xl md:text-3xl font-extrabold">What clients say (sample)</h2>
-      <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+  <!-- TESTIMONIALS -->
+  <section class="section">
+    <div class="container text-center">
+      <div class="section-heading" aria-hidden="true"><span>Testimonials</span></div>
+      <p class="max-w-2xl mx-auto text-[rgba(230,238,248,0.86)] mb-8">Short sample quotes to show rhythm and spacing.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <blockquote class="p-6 card-bg rounded-2xl">
-          <p class="text-[rgba(230,238,248,0.9)]">"SampleCo's modular approach allowed our team to set up a remote site in record time." — Client A (fictional)</p>
+          <p class="text-[rgba(230,238,248,0.9)]">"Fast turnout and great communication." — Client A (sample)</p>
         </blockquote>
 
         <blockquote class="p-6 card-bg rounded-2xl">
-          <p class="text-[rgba(230,238,248,0.9)]">"The engineering team delivered a clean, practical design aligned to our constraints." — Client B (fictional)</p>
+          <p class="text-[rgba(230,238,248,0.9)]">"Engineering design was clear and practical." — Client B (sample)</p>
         </blockquote>
 
         <blockquote class="p-6 card-bg rounded-2xl">
-          <p class="text-[rgba(230,238,248,0.9)]">"Great communication and quick turnaround during the sample project." — Client C (fictional)</p>
+          <p class="text-[rgba(230,238,248,0.9)]">"Delivered on time with clean handover." — Client C (sample)</p>
         </blockquote>
       </div>
     </div>
   </section>
 
-  <!-- Contact -->
-  <section id="contact" class="py-16 bg-[linear-gradient(180deg,rgba(255,255,255,0.01),transparent)]">
+  <!-- CONTACT -->
+  <section id="contact" class="section">
     <div class="container">
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+      <div class="section-heading" aria-hidden="true"><span>Contact</span></div>
+
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
         <div class="md:col-span-5">
-          <h2 class="text-2xl md:text-3xl font-extrabold">Contact us</h2>
-          <p class="mt-3 text-[rgba(230,238,248,0.85)]">This is a sample contact form (does not send). Replace the action with your endpoint or connect to serverless function.</p>
+          <h3 class="font-semibold">Get in touch (sample)</h3>
+          <p class="mt-3 text-[rgba(230,238,248,0.86)]">This is a demo contact form — it does not actually send. Replace the form action with your endpoint later.</p>
 
           <div class="mt-6 space-y-4 text-sm text-[rgba(230,238,248,0.8)]">
             <div><strong>Address (sample)</strong><div class="mt-1">123 Demo Lane, Example City</div></div>
@@ -468,7 +573,7 @@
   </section>
 
   <!-- Footer -->
-  <footer class="py-8 text-center text-sm text-[rgba(230,238,248,0.5)]">
+  <footer class="py-8 text-center text-sm text-[rgba(230,238,248,0.5)]" style="background: var(--section-bg);">
     <div class="container">
       <div>© <span id="year"></span> SampleCo — Demo site. All content is fictional.</div>
       <div class="mt-2">
@@ -478,7 +583,7 @@
     </div>
   </footer>
 
-  <!-- Scripts: accessible drawer, focus trap, theme toggle, simple form validation -->
+  <!-- Scripts -->
   <script>
     (function(){
       const openBtn = document.getElementById('open-drawer');
@@ -489,7 +594,6 @@
       const focusableSelector = 'a, button, input, textarea, [tabindex]:not([tabindex="-1"])';
       let lastFocused = null;
 
-      // Safe guards
       if (!openBtn || !drawer || !overlay || !main) {
         try { document.getElementById('year').textContent = new Date().getFullYear(); } catch(e){}
         return;
@@ -538,41 +642,22 @@
       openBtn.addEventListener('click', showDrawer);
       closeBtn?.addEventListener('click', hideDrawer);
       overlay.addEventListener('click', hideDrawer);
-      overlay.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); hideDrawer(); }
-      });
+      overlay.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); hideDrawer(); } });
+      document.addEventListener('keydown', (e) => { if(e.key === 'Escape' && drawer.classList.contains('open')) hideDrawer(); });
 
-      document.addEventListener('keydown', (e) => {
-        if(e.key === 'Escape' && drawer.classList.contains('open')) hideDrawer();
-      });
-
-      // Focus trap for drawer
       let focusables = [];
       function trapFocus(){
         focusables = Array.from(drawer.querySelectorAll(focusableSelector)).filter(el => !el.hasAttribute('disabled'));
-        if(!focusables.length) {
-          drawer.setAttribute('tabindex','-1');
-          drawer.focus();
-          return;
-        }
+        if(!focusables.length) { drawer.setAttribute('tabindex','-1'); drawer.focus(); return; }
         drawer.addEventListener('keydown', handleTrap);
       }
-      function releaseTrap(){
-        drawer.removeEventListener('keydown', handleTrap);
-        focusables = [];
-        drawer.removeAttribute('tabindex');
-      }
+      function releaseTrap(){ drawer.removeEventListener('keydown', handleTrap); focusables = []; drawer.removeAttribute('tabindex'); }
       function handleTrap(e){
         if(e.key !== 'Tab') return;
         const first = focusables[0];
         const last = focusables[focusables.length - 1];
-        if(e.shiftKey && document.activeElement === first){
-          e.preventDefault();
-          last.focus();
-        } else if(!e.shiftKey && document.activeElement === last){
-          e.preventDefault();
-          first.focus();
-        }
+        if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+        else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
       }
 
       // Footer year
@@ -586,21 +671,16 @@
         const next = current === 'dark' ? 'light' : 'dark';
         html.setAttribute('data-theme', next);
         try { localStorage.setItem('site-theme', next); } catch(e){}
-        // Note: add CSS variables for [data-theme="light"] if you want a full light mode.
       });
-      try {
-        const saved = localStorage.getItem('site-theme');
-        if(saved) document.documentElement.setAttribute('data-theme', saved);
-      } catch(e){}
+      try { const saved = localStorage.getItem('site-theme'); if(saved) document.documentElement.setAttribute('data-theme', saved); } catch(e){}
 
-      // Contact form: client-side validation + sample status handling
+      // Contact form demo handling
       const form = document.getElementById('contact-form');
       const statusEl = document.getElementById('form-status');
       const resetBtn = document.getElementById('reset-btn');
 
-      form.addEventListener('submit', (e) => {
+      form?.addEventListener('submit', (e) => {
         e.preventDefault();
-        // simple required checks
         const name = form.querySelector('#name');
         const email = form.querySelector('#email');
         const message = form.querySelector('#message');
@@ -608,10 +688,9 @@
         if(!name.value.trim() || !email.value.trim() || !message.value.trim()){
           statusEl.style.color = '#ffcccb';
           statusEl.textContent = 'Please fill in required fields.';
-          (name.value.trim() || email.value.trim() || message.value.trim()) ? null : name.focus();
+          (name.value.trim() ? null : name.focus());
           return;
         }
-        // rudimentary email pattern
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if(!emailPattern.test(email.value.trim())){
           statusEl.style.color = '#ffcccb';
@@ -619,17 +698,12 @@
           email.focus();
           return;
         }
-
-        // Simulate sending (this is a demo — no network)
         statusEl.style.color = 'var(--accent)';
         statusEl.textContent = 'Message sent (demo). Thank you!';
         form.reset();
       });
 
-      resetBtn.addEventListener('click', () => {
-        form.reset();
-        statusEl.textContent = '';
-      });
+      resetBtn?.addEventListener('click', () => { form.reset(); statusEl.textContent = ''; });
 
     })();
   </script>
